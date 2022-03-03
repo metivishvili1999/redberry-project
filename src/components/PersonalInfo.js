@@ -1,5 +1,5 @@
 import { React, useState } from 'react';
-import { validEmail, validFirstName, validLastName, validNumber } from './FormValidations'
+import { validmail, validNum } from './FormValidations'
 import next from '../assets/Next.svg'
 import prev from '../assets/Previous.svg'
 import ellipse1 from '../assets/Ellipse 1.svg';
@@ -7,32 +7,87 @@ import ellipse2 from '../assets/Ellipse 2.svg';
 
 
 
-const PersonalInfo = ({ nextPage, prevPage, handleInfo }) => {
+const PersonalInfo = ({ nextPage, prevPage, personal }) => {
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [number, setNumber] = useState('');
-  const [firstNameErr, setFirstNameErr] = useState(false)
-  const [lastNameErr, setLastNameErr] = useState(false);
-  const [emailErr, setEmailErr] = useState(false);
-  const [numberErr, setNumberErr] = useState(false);
+  const [firstNameErr, setFirstNameErr] = useState('')
+  const [lastNameErr, setLastNameErr] = useState('');
+  const [emailErr, setEmailErr] = useState('');
+  const [numberErr, setNumberErr] = useState('');
 
-  const validate = () => {
-    if (!validFirstName.test(firstName)) {
-      setFirstNameErr(true);
+
+  const validFirstName = () => {
+    if(firstName === '') {
+      setFirstNameErr('first name is required')
+      return false;
+    } else if(firstName.length < 2){
+      setFirstNameErr('first name should include 2 or more characters')
+      return false;
+    } else {
+      return true;
     }
-    if (!validLastName.test(lastName)){
-      setLastNameErr(true);
+  }
+
+  const validLastName = () => {
+    if(lastName === '') {
+      setLastNameErr('last name is required')
+      return false;
+    } else if(lastName.length < 2){
+      setFirstNameErr('last name should include 2 or more characters')
+      return false;
+    } else {
+      return true;
     }
-     if (!validEmail.test(email)) {
-        setEmailErr(true);
-     }
-     if (!validNumber.test(number)) {
-        setNumberErr(true);
-     }
-     
-  };
+  }
+
+  const validEmail = () => {
+    if(email === ''){
+      setEmailErr('email is required')
+      return false;
+    } else if (!email.match(validmail)){
+      setEmailErr('email must be correct email address')
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  const validNumber = () => {
+    if(!number.match(validNum) && !number ===''){
+      setNumberErr('phone must be correct phone number')
+      return false;
+    }  else {
+      return true;
+    }
+  }
+
+
+  const validationResult = () => {
+    setFirstNameErr('');
+    setLastNameErr('');
+    setEmailErr('');
+    setNumberErr('');
+    validFirstName('');
+    validLastName('');
+    validEmail('');
+    validNumber('');
+    if(validFirstName() &&
+      validLastName() &&
+      validEmail() &&
+      validNumber()){
+      personal({
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        number: number ? number : ''
+      })
+      console.log(personal)
+      nextPage();
+    }
+  }
 
 
   return (
@@ -48,7 +103,7 @@ const PersonalInfo = ({ nextPage, prevPage, handleInfo }) => {
         value={firstName}
         onChange={(e) => setFirstName(e.target.value)}
         />
-        {firstNameErr && <p>first name is required</p>}
+        {firstNameErr && <p className="personalValidation">{firstNameErr}</p>}
           </div>
 
           <div>
@@ -57,7 +112,7 @@ const PersonalInfo = ({ nextPage, prevPage, handleInfo }) => {
         value={lastName}
         onChange={(e) => setLastName(e.target.value)}
         />
-        {lastNameErr && <p>last name should include 2 or more characters</p>}
+        {lastNameErr && <p className="personalValidation">{lastNameErr}</p>}
           </div>
 
           <div>
@@ -67,20 +122,19 @@ const PersonalInfo = ({ nextPage, prevPage, handleInfo }) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
          />
-         {emailErr && <p>Your email is invalid</p>}
+         {emailErr && <p className="personalValidation">{emailErr}</p>}
           </div>
 
           <div>
           <input
-            type="number"
+            type="text"
             placeholder="+995 5"
             value={number}
             onChange={(e) => setNumber(e.target.value)}
          />
-         {numberErr && <p>Your number is invalid</p>}
+         {numberErr && <p className="personalValidation">{numberErr}</p>}
           </div>
         </div>
-        {/* Navigation */}
         <div className="pagination">
           <img src={prev} onClick={prevPage} className="prevnext" />
           <img src={ellipse1} className="pagination-steps" />
@@ -88,7 +142,7 @@ const PersonalInfo = ({ nextPage, prevPage, handleInfo }) => {
           <img src={ellipse2} className="pagination-steps" />
           <img src={ellipse2} className="pagination-steps" />
           <img src={ellipse2} className="pagination-steps" />
-          <img src={next} onClick={validate} className="prevnext" />
+          <img src={next} onClick={validationResult} className="prevnext" />
         </div>
       </div>
       <div className="right-panel">
