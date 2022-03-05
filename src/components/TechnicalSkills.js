@@ -1,7 +1,5 @@
 
-
 import React from 'react'
-import axios from 'axios';
 import { useEffect, useState, useRef } from 'react';
 import '../App.css';
 import next from '../assets/Next.svg'
@@ -12,12 +10,15 @@ import remove from '../assets/Remove.svg';
 
 const TechnicalSkills = ({nextPage, prevPage}) => {
 
+
   const [skills, setSkills] = useState ([])
   const [skillsList, setSkillsList] = useState ([])
+  const [skillsFormErr, setSkillsFormErr] = useState ([])
   const inputYears = useRef(null)
   const inputSkill = useRef(null)
 
   useEffect(() => {
+
     fetch('https://bootcamp-2022.devtest.ge/api/skills')
       .then((response) => response.json())
       .then((data) => {
@@ -47,19 +48,24 @@ const TechnicalSkills = ({nextPage, prevPage}) => {
     }
   };
 
-  useEffect(() => {
-    let Err = '';
-    if (skillsList.length === 0) {
-      Err = 'You need to choose at least one skill!';
+
+
+  const validateSkillsForm = () => {
+    if(skillsList.length === 0){
+      setSkillsFormErr('You need to choose at least one skill!')
+      return false;
+    } else {
+      return true;
     }
-    setSkillsFormErr(Err);
-    setSkillsForm(
-      skillsList.map((skill) => {
-        const { id, experience } = skill;
-        return { id, experience };
-      })
-    );
-  }, [skillsList]);
+  }
+
+  const validateSkills = () => {
+    setSkillsFormErr('');
+    validateSkillsForm('');
+    if(validateSkillsForm()) {
+      nextPage();
+    }
+  }
 
 
   return (
@@ -84,6 +90,7 @@ const TechnicalSkills = ({nextPage, prevPage}) => {
             <button type='button' onClick={() => {addSkills()}}>Add Programming Language</button>
           </div>
         </div>  
+        <h3 className="skills-error">{skillsFormErr}</h3>
         <div className='chosen-skills'>
               {skillsList.map((element) => {
                 return (
@@ -110,7 +117,7 @@ const TechnicalSkills = ({nextPage, prevPage}) => {
           <img src={ellipse2} className="pagination-steps" />
           <img src={ellipse2} className="pagination-steps" />
           <img src={ellipse2} className="pagination-steps" />
-          <img src={next} onClick={nextPage} className="prevnext" />
+          <img src={next} onClick={validateSkills} className="prevnext" />
         </div>            
       </div>
       <div className='skills-right-panel'>
