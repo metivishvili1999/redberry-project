@@ -1,28 +1,65 @@
+
+
 import React from 'react'
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import '../App.css';
+import next from '../assets/Next.svg'
+import prev from '../assets/Previous.svg'
+import ellipse1 from '../assets/Ellipse 1.svg';
+import ellipse2 from '../assets/Ellipse 2.svg';
+import remove from '../assets/Remove.svg';
 
-
-const TechnicalSkills = () => {
+const TechnicalSkills = ({nextPage, prevPage}) => {
 
   const [skills, setSkills] = useState ([])
-  const [skillsList, setSkillsList] = useState ({
-    id: '',
-    experience: ''
-  })
+  const [skillsList, setSkillsList] = useState ([])
+  const inputYears = useRef(null)
+  const inputSkill = useRef(null)
 
   useEffect(() => {
-    const getSkills = async() => {
-        try{
-            let {data} = await axios.get('https://bootcamp-2022.devtest.ge/api/skills')
-            setSkills(data)
-        }catch(Error){
-            console.log({message: Error})
-        }
+    fetch('https://bootcamp-2022.devtest.ge/api/skills')
+      .then((response) => response.json())
+      .then((data) => {
+        setSkills(data);
+      });
+  }, []);
+
+  const addSkills = () => {
+    if (
+      skillsList.filter((obj) => obj.skill === inputSkill.current.value)
+        .length === 0
+    ) {
+      if (
+        inputSkill.current.value !== 'Skills' &&
+        +inputYears.current.value > 0
+      ) {
+        setSkillsList(
+          skillsList.concat([
+            {
+              id: inputSkill.current.selectedIndex - 1,
+              skill: inputSkill.current.value,
+              experience: +inputYears.current.value,
+            },
+          ])
+        );
+      }
     }
-    getSkills()
-}, [])
+  };
+
+  useEffect(() => {
+    let Err = '';
+    if (skillsList.length === 0) {
+      Err = 'You need to choose at least one skill!';
+    }
+    setSkillsFormErr(Err);
+    setSkillsForm(
+      skillsList.map((skill) => {
+        const { id, experience } = skill;
+        return { id, experience };
+      })
+    );
+  }, [skillsList]);
 
 
   return (
@@ -32,21 +69,49 @@ const TechnicalSkills = () => {
           Tell us about your skills
         </div>
         <div className="skills-form">
-          <select defaultValue={'skills'} onChange={({target}) => setSkillsList({skill: target.value, experience: skillsList.experience})}>
-            <option  disabled value={'skills'}>skills</option>
-            {skills.map(skills => {
-              return(
-                <option key={skills.id} value={skills.id}>{skills.title}</option>
-                )
+        <select defaultValue="Skills" ref={inputSkill}>
+                <option>Skills</option>
+                {skills.map((skill) => {
+                  return <option>{skill.title}</option>;
                 })}
-          </select>
-          <input onChange={({target}) => setSkillsList({id: skillsList.skill, experience: target.value})}
-            type='text'
-            placeholder="Experience Duration in Years" />
+              </select>
+              <input
+                type="number"
+                placeholder="Experience Duration in Years"
+                ref={inputYears}
+              />
           <div className='addButton'>
-            <button onClick={() => console.log(skillsList)}>Add Programming Language</button>
+            <button type='button' onClick={() => {addSkills()}}>Add Programming Language</button>
           </div>
-        </div>              
+        </div>  
+        <div className='chosen-skills'>
+              {skillsList.map((element) => {
+                return (
+                  <div className="chosen-skills-list">
+                    <div className='skill-title'>{element.skill}</div>
+                    <div className='skill-exp'>Years of Experience: {element.experience}</div>
+                    <img
+                      src={remove}
+                      className='remove-skill'
+                      onClick={() => {
+                        setSkillsList(
+                          skillsList.filter((skillObj) => skillObj !== element)
+                        );
+                      }}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+        <div className="pagination">
+          <img src={prev} onClick={prevPage} className="prevnext" />
+          <img src={ellipse2} className="pagination-steps" />
+          <img src={ellipse1} className="pagination-steps" />
+          <img src={ellipse2} className="pagination-steps" />
+          <img src={ellipse2} className="pagination-steps" />
+          <img src={ellipse2} className="pagination-steps" />
+          <img src={next} onClick={nextPage} className="prevnext" />
+        </div>            
       </div>
       <div className='skills-right-panel'>
         <h1 className='skills-right-panel-title'>A bit about our battles</h1>
