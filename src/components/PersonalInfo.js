@@ -1,4 +1,4 @@
-import { React, useState } from 'react';
+import { React,useEffect, useState } from 'react';
 import { validmail, validNum } from './FormValidations'
 import next from '../assets/Next.svg'
 import prev from '../assets/Previous.svg'
@@ -7,7 +7,7 @@ import ellipse2 from '../assets/Ellipse 2.svg';
 
 
 
-const PersonalInfo = ({ nextPage, prevPage, personal }) => {
+const PersonalInfo = ({ nextPage, prevPage, handlePersonalInfo, userObject }) => {
 
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -17,6 +17,21 @@ const PersonalInfo = ({ nextPage, prevPage, personal }) => {
   const [lastNameErr, setLastNameErr] = useState('');
   const [emailErr, setEmailErr] = useState('');
   const [numberErr, setNumberErr] = useState('');
+
+  useEffect(() => {
+    if(userObject.first_name){
+      setFirstName(userObject.first_name);
+    }
+    if(userObject.last_name){
+      setLastName(userObject.last_name);
+    }
+    if(userObject.email){
+      setEmail(userObject.email);
+    }
+    if(userObject.phone){
+      setNumber(userObject.phone);
+    }
+  }, [userObject])
 
 
   const validFirstName = () => {
@@ -78,61 +93,62 @@ const PersonalInfo = ({ nextPage, prevPage, personal }) => {
       validLastName() &&
       validEmail() &&
       validNumber()){
-      personal({
+        handlePersonalInfo({
         firstName: firstName,
         lastName: lastName,
         email: email,
         number: number ? number : ''
       })
-      console.log(personal)
       nextPage();
     }
   }
 
 
   return (
-    <div className="form">
+    <div className="personalInfo-container">
       <div className="left-panel">
         <div className="left-panel-text">
           Hey, Rocketeer, what are your coordinates?
         </div>
         <div className="info-form">
           <div>
-          <input type="text"
-        placeholder='First Name'
-        value={firstName}
-        onChange={(e) => setFirstName(e.target.value)}
-        />
-        {firstNameErr && <p className="personalValidation">{firstNameErr}</p>}
+            <input
+              type="text"
+              placeholder='First Name'
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+            {firstNameErr && <p className="personalValidation">{firstNameErr}</p>}
           </div>
 
           <div>
-          <input type="text"
-        placeholder='Last Name'
-        value={lastName}
-        onChange={(e) => setLastName(e.target.value)}
-        />
-        {lastNameErr && <p className="personalValidation">{lastNameErr}</p>}
+            <input
+              type="text"
+              placeholder='Last Name'
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+            />
+            {lastNameErr && <p className="personalValidation">{lastNameErr}</p>}
           </div>
 
           <div>
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-         />
-         {emailErr && <p className="personalValidation">{emailErr}</p>}
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            {emailErr && <p className="personalValidation">{emailErr}</p>}
           </div>
 
           <div>
-          <input
-            type="text"
-            placeholder="+995 5"
-            value={number}
-            onChange={(e) => setNumber(e.target.value)}
-         />
-         {numberErr && <p className="personalValidation">{numberErr}</p>}
+            <input
+              type="text"
+              placeholder="+995 5__ __ __ __"
+              value={number}
+              onChange={(e) => setNumber(e.target.value)}
+            />
+            {numberErr && <p className="personalValidation">{numberErr}</p>}
           </div>
         </div>
         <div className="pagination">
