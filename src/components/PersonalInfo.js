@@ -105,50 +105,48 @@ const PersonalInfo = ({ nextPage, prevPage, handlePersonalInfo, userObject }) =>
 
 
   return (
-    <div className="personalInfo-container">
+    <div className="form">
       <div className="left-panel">
         <div className="left-panel-text">
           Hey, Rocketeer, what are your coordinates?
         </div>
         <div className="info-form">
           <div>
-            <input
-              type="text"
-              placeholder='First Name'
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-            />
-            {firstNameErr && <p className="personalValidation">{firstNameErr}</p>}
+          <input type="text"
+        placeholder='First Name'
+        value={firstName}
+        onChange={(e) => setFirstName(e.target.value)}
+        />
+        {firstNameErr && <p className="personalValidation">{firstNameErr}</p>}
           </div>
 
           <div>
-            <input
-              type="text"
-              placeholder='Last Name'
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
-            />
-            {lastNameErr && <p className="personalValidation">{lastNameErr}</p>}
+          <input type="text"
+        placeholder='Last Name'
+        value={lastName}
+        onChange={(e) => setLastName(e.target.value)}
+        />
+        {lastNameErr && <p className="personalValidation">{lastNameErr}</p>}
           </div>
 
           <div>
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            {emailErr && <p className="personalValidation">{emailErr}</p>}
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+         />
+         {emailErr && <p className="personalValidation">{emailErr}</p>}
           </div>
 
           <div>
-            <input
-              type="text"
-              placeholder="+995 5__ __ __ __"
-              value={number}
-              onChange={(e) => setNumber(e.target.value)}
-            />
-            {numberErr && <p className="personalValidation">{numberErr}</p>}
+          <input
+            type="text"
+            placeholder="+995 5__ __ __ __"
+            value={number}
+            onChange={(e) => setNumber(e.target.value)}
+         />
+         {numberErr && <p className="personalValidation">{numberErr}</p>}
           </div>
         </div>
         <div className="pagination">
